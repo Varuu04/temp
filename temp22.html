@@ -1,28 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ball Catch Game</title>
+    <style>
+        #score {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <img src="assets/images/ball.png" width="200px" id="ball"/>
-    <div id="root"></div>
+    <div id="score">Score: 0</div>
+    <img src="assets/images/ball.png" width="80px" id="ball" />
+    <img src="assets/images/bucket.jpg" width="150px" id="bucket" />
+
     <script>
-        ball.style.position="absolute";
-        let b=document.body;
-        let left=0;
-        let down=0;
-        b.onkeydown=(e) => {
-            if(e.key=="ArrowRight") left+=5;
-            if(e.key=="ArrowDown") down+=5;
-            if(e.key=="ArrowUp") down-=5;
-            if(e.key=="ArrowLeft") left-=5;
-            ball.style.left =left+"px"; 
-            ball.style.top =down+"px";
-            // ball.style.left =left-"px"; 
-            // ball.style.top =down-"px";
+        let bucket = document.getElementById("bucket");
+        let ball = document.getElementById("ball");
+        let scoreDisplay = document.getElementById("score");
+
+        bucket.style.position = "absolute";
+        ball.style.position = "absolute";
+
+        let left = 0;
+        let down = 400;
+        let score = 0;
+
+        bucket.style.left = left + "px";
+        bucket.style.top = down + "px";
+
+        document.body.onkeydown = (e) => {
+            if (e.key === "ArrowRight") left += 10;
+            if (e.key === "ArrowDown") down += 10;
+            if (e.key === "ArrowLeft") left -= 10;
+            if (e.key === "ArrowUp") down -= 10;
+            bucket.style.left = left + "px";
+            bucket.style.top = down + "px";
         };
+
+        let t = 0;
+        let l = Math.random() * 500;
+
+        function ballFall() {
+            t += 5; // Faster fall speed
+
+            if (t >400) { // Ball reaches bottom
+                let ballLeft = parseInt(ball.style.left, 10);
+                let bucketLeft = parseInt(bucket.style.left, 10);
+
+                // Check if ball is inside bucket range (considering the width)
+                if (ballLeft + 50 >= bucketLeft && ballLeft <= bucketLeft + 100) {
+                    score++;
+                    scoreDisplay.innerText = "Score: " + score;
+                }
+
+                // Reset ball position
+                t = 0;
+                l = Math.random() * 500;
+                ball.style.left = l + "px";
+            }
+
+            ball.style.top = t + "px";
+
+            setTimeout(ballFall, 70);
+        }
+
+        ballFall();
     </script>
 </body>
 </html>
